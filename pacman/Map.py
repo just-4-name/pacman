@@ -7,7 +7,16 @@ class BlockType(enum.Enum):
     space = 0
 
 
-class Map:
+class Singleton(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+
+class Map(metaclass=Singleton):
     BLUE = (0, 0, 255)
 
     def __init__(self, blocks, block_size):

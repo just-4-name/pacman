@@ -2,7 +2,7 @@ from MapBuilder import *
 from Pacman import Pacman
 
 
-class World:
+class World(metaclass=Singleton):
     BLOCK_SIZE = 40
 
     def __init__(self, screen):

@@ -17,7 +17,8 @@ running = True
 while running:
     clock.tick(FPS)
     pygame.display.flip()
-    world.update()
+    if world.update():
+        pygame.quit()
     world.draw()
 
     for event in pygame.event.get():

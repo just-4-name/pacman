@@ -14,11 +14,13 @@ class MapBuilder:
                 elif block == '.':
                     cur.append(BlockType.space)
             blocks.append(cur)
-        self.__map__ = Map(blocks, block_size)
-        self.__ghosts__ = [Ghost(60, 260, self.__map__)]
+        self.__map = Map(blocks, block_size)
+        self.__ghosts = [Ghost(60, 260, self.__map)]
 
-    def get_map(self):
-        return self.__map__
+    @property
+    def map(self):
+        return self.__map
 
-    def get_ghosts(self):
-        return self.__ghosts__
+    @property
+    def ghosts(self):
+        return self.__ghosts

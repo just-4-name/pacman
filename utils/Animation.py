@@ -2,16 +2,18 @@ import pygame
 
 
 class Animation:
-    def __init__(self, frames):
+    def __init__(self, frames, time_per_frame):
         self.__frames = frames
-        self.__cur_frame = 0
+        self.__playing_time = 0
         self.__last_img = frames[0]
+        self.__time_per_frame = time_per_frame
+        self.__total_animation_time = len(frames) * time_per_frame
 
-    def next_frame(self):
-        self.__cur_frame = (self.__cur_frame + 1) % len(self.__frames)
+    def update(self):
+        self.__playing_time = (self.__playing_time + 1) % self.__total_animation_time
 
     def get_image(self, x_direction, y_direction):
-        cur_img = self.__frames[self.__cur_frame]
+        cur_img = self.__frames[self.__playing_time // self.__time_per_frame]
         if x_direction == 1:
             self.__last_img = cur_img
         elif x_direction == -1:

@@ -8,8 +8,7 @@ from utils.Circle import Circle
 
 class Pacman(metaclass=Singleton):
     Yellow = (255, 255, 0)
-    frames_counter = 0
-    FRAMES_PER_ANIMATION = 4
+    TIME_PER_FRAME = 4
 
     def __init__(self, mapp, block, pacman_images):
         self.__x = mapp.block_size * (block.x + 0.5)
@@ -18,22 +17,21 @@ class Pacman(metaclass=Singleton):
         self.__intended_speed_y = self.__speed_y = 0
         self.__map = mapp
         self.__radius = self.__map.block_size / 2 - self.__map.eps / 3
-        self.__pacman_animation = Animation(pacman_images)
+        self.__pacman_animation = Animation(pacman_images, self.TIME_PER_FRAME)
 
     def update(self, dt):
-        self.frames_counter = (self.frames_counter + 1) % self.FRAMES_PER_ANIMATION
         if self.__speed_x != self.__intended_speed_x or self.__speed_y != self.__intended_speed_y:
             if self.__try_turn():
                 self.__speed_y = self.__intended_speed_y
                 self.__speed_x = self.__intended_speed_x
         self.__x += self.__speed_x * dt
         self.__y += self.__speed_y * dt
-        if self.frames_counter == 0:
-            self.__pacman_animation.next_frame()
+        self.__pacman_animation.update()
 
     def draw(self, screen):
         intent = self.__map.block_size / 2
-        screen.blit(self.__pacman_animation.get_image(self.__x_direction(), self.__y_direction()),
+        screen.blit(self.__pacman_animation.get_image(self.__speed_x // self.abs_speed__,
+                                                      self.__speed_y // self.abs_speed__),
                     (self.__x - intent, self.__y - intent))
         pygame.draw.circle(screen, self.Yellow, (self.__x + self.__x_direction() * self.__map.block_size,
                                                  self.__y + self.__y_direction() * self.__map.block_size),

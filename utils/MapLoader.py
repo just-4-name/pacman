@@ -1,12 +1,18 @@
+import pygame.transform
+
+from objects.Coins import Coins
 from objects.Ghost import Ghost
-from resources import PATH_TO_MAP
+from resources import PATH_TO_MAP, PACMAN_IMAGES
 from objects.Map import Map, BlockType
 from objects.Pacman import Pacman
 from utils.Block import Block
 
 
 class MapLoader:
+    __pacman_images = []
+
     def __init__(self, block_size):
+        self.__get_images(block_size)
         pacman_block = Block(-1, -1)
         ghosts_blocks = []
         f = open(PATH_TO_MAP, 'r')
@@ -17,19 +23,24 @@ class MapLoader:
                 if block == '1':
                     cur.append(BlockType.WALL)
                 elif block == '0':
-                    cur.append(BlockType.SPACE)
+                    cur.append(BlockType.COIN)
                 elif block == '2':
                     pacman_block = Block(len(cur), len(blocks))
-                    cur.append(BlockType.SPACE)
+                    cur.append(BlockType.COIN)
                 elif block == '3':
                     ghosts_blocks.append(Block(len(cur), len(blocks)))
-                    cur.append(BlockType.SPACE)
+                    cur.append(BlockType.COIN)
             blocks.append(cur)
         self.__map = Map(blocks, block_size)
-        self.__pacman = Pacman(self.__map, pacman_block)
+        self.__pacman = Pacman(self.__map, pacman_block, self.__pacman_images)
         self.__ghosts = []
+        self.__coins = Coins(self.__map)
         for block in ghosts_blocks:
             self.__ghosts.append(Ghost(self.__map, block))
+
+    def __get_images(self, block_size):
+        for path in PACMAN_IMAGES:
+            self.__pacman_images.append(pygame.transform.scale(pygame.image.load(path), (block_size, block_size)))
 
     @property
     def map(self):
@@ -42,3 +53,7 @@ class MapLoader:
     @property
     def pacman(self):
         return self.__pacman
+
+    @property
+    def coins(self):
+        return self.__coins

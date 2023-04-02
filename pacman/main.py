@@ -3,7 +3,7 @@ from pacman.World import World
 
 
 WIDTH = World.BLOCK_SIZE * 15
-HEIGHT = World.BLOCK_SIZE * 15
+HEIGHT = World.BLOCK_SIZE * 15 + 100
 FPS = 60
 
 pygame.init()

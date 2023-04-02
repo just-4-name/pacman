@@ -1,10 +1,10 @@
 import pygame
-from World import World
+from pacman.World import World
 
 
-WIDTH = 480
-HEIGHT = 480
-FPS = 30
+WIDTH = World.BLOCK_SIZE * 15
+HEIGHT = World.BLOCK_SIZE * 15
+FPS = 60
 
 pygame.init()
 pygame.mixer.init()

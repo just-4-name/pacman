@@ -21,7 +21,7 @@ class ShortestPathFinder:
 
     def __a_star(self, start, target):
         dist = [[-1] * len(self.__map.blocks) for _ in range(len(self.__map.blocks))]
-        prev = [[Block(-1, -1)] * len(self.__map.blocks) for _ in range(len(self.__map.blocks))]
+        prev = [[start] * len(self.__map.blocks) for _ in range(len(self.__map.blocks))]
         dist[start.y][start.x] = 0
         queue = []
         hq.heappush(queue, (0, start))

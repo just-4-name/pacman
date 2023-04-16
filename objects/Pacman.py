@@ -11,13 +11,22 @@ class Pacman(metaclass=Singleton):
     TIME_PER_FRAME = 4
 
     def __init__(self, mapp, block, pacman_images):
-        self.__x = mapp.block_size * (block.x + 0.5)
-        self.__y = mapp.block_size * (block.y + 0.5)
+        self.__initial_x = mapp.block_size * (block.x + 0.5)
+        self.__initial_y = mapp.block_size * (block.y + 0.5)
+        self.__x = self.__initial_x
+        self.__y = self.__initial_y
         self.__intended_speed_x = self.__speed_x = self.abs_speed__ = 2
         self.__intended_speed_y = self.__speed_y = 0
         self.__map = mapp
         self.__radius = self.__map.block_size / 2 - self.__map.eps / 3
         self.__pacman_animation = Animation(pacman_images, self.TIME_PER_FRAME)
+        self.__lives_counter = 3
+
+    def move_to_initial_position(self):
+        self.__x = self.__initial_x
+        self.__y = self.__initial_y
+        self.__intended_speed_x = self.__speed_x = self.abs_speed__ = 2
+        self.__intended_speed_y = self.__speed_y = 0
 
     def update(self, dt):
         if self.__speed_x != self.__intended_speed_x or self.__speed_y != self.__intended_speed_y:
@@ -30,11 +39,10 @@ class Pacman(metaclass=Singleton):
 
     def draw(self, screen):
         intent = self.__map.block_size / 2
-        screen.blit(self.__pacman_animation.get_image(self.__speed_x // self.abs_speed__,
-                                                      self.__speed_y // self.abs_speed__),
+        screen.blit(self.__pacman_animation.get_image(self.x_direction(), self.y_direction()),
                     (self.__x - intent, self.__y - intent))
-        pygame.draw.circle(screen, self.Yellow, (self.__x + self.__x_direction() * self.__map.block_size,
-                                                 self.__y + self.__y_direction() * self.__map.block_size),
+        pygame.draw.circle(screen, self.Yellow, (self.__x + self.__intended_x_direction() * self.__map.block_size,
+                                                 self.__y + self.__intended_y_direction() * self.__map.block_size),
                            self.__map.eps)
 
     def update_direction(self, event_key):
@@ -66,23 +74,39 @@ class Pacman(metaclass=Singleton):
             if self.__speed_y != 0:
                 return True
             elif abs(self.__x - center_x) < self.__map.eps and \
-                    self.__map.blocks[row + self.__y_direction()][col] != BlockType.WALL:
+                    self.__map.blocks[row + self.__intended_y_direction()][col] != BlockType.WALL:
                 self.__x = center_x
                 return True
         else:
             if self.__speed_x != 0:
                 return True
             elif abs(self.__y - center_y) < self.__map.eps and \
-                    self.__map.blocks[row][col + self.__x_direction()] != BlockType.WALL:
+                    self.__map.blocks[row][col + self.__intended_x_direction()] != BlockType.WALL:
                 self.__y = center_y
                 return True
         return False
 
-    def __x_direction(self):
+    def __intended_x_direction(self):
         return self.__intended_speed_x // self.abs_speed__
 
-    def __y_direction(self):
+    def __intended_y_direction(self):
         return self.__intended_speed_y // self.abs_speed__
+
+    def x_direction(self):
+        return self.__speed_x // self.abs_speed__
+
+    def y_direction(self):
+        return self.__speed_y // self.abs_speed__
+
+    def died(self):
+        self.__lives_counter -= 1
+
+    def is_alive(self):
+        return self.__lives_counter > 0
+
+    @property
+    def lives_counter(self):
+        return self.__lives_counter
 
     @property
     def circle(self):

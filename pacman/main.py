@@ -3,7 +3,7 @@ from pacman.World import World
 
 
 WIDTH = World.BLOCK_SIZE * 15
-HEIGHT = World.BLOCK_SIZE * 15
+HEIGHT = World.BLOCK_SIZE * 15 + 100
 FPS = 60
 
 pygame.init()
@@ -17,8 +17,7 @@ running = True
 while running:
     clock.tick(FPS)
     pygame.display.flip()
-    if world.update():
-        pygame.quit()
+    world.update()
     world.draw()
 
     for event in pygame.event.get():

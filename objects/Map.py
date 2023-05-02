@@ -1,11 +1,6 @@
-import enum
+from utils.BlockType import BlockType
 import pygame
 from utils.Singleton import Singleton
-
-
-class BlockType(enum.Enum):
-    WALL = 1
-    SPACE = 0
 
 
 class Map(metaclass=Singleton):
@@ -22,6 +17,9 @@ class Map(metaclass=Singleton):
                 if self.__blocks[i][j] == BlockType.WALL:
                     pygame.draw.rect(screen, self.BLUE, (j * self.__block_size, i * self.__block_size,
                                                          self.__block_size, self.__block_size))
+
+    def picked_coin(self, block):
+        self.blocks[block.y][block.x] = BlockType.SPACE
 
     @property
     def blocks(self):

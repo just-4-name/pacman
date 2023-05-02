@@ -1,49 +1,58 @@
 from utils.Block import Block
 from utils.Circle import Circle
 from utils.PathFinder import ShortestPathFinder
-import pygame
 
 
 class Ghost:
-    Red = (255, 0, 0)
+    _img = None
 
     def __init__(self, mapp, block):
-        self.__x = mapp.block_size * (block.x + 0.5)
-        self.__y = mapp.block_size * (block.y + 0.5)
-        self.__map = mapp
-        self.__speed_x = self.__speed_y = 0
-        self.__abs_speed = 1
-        self.__radius = mapp.block_size / 2
+        self._initial_x = mapp.block_size * (block.x + 0.5)
+        self._initial_y = mapp.block_size * (block.y + 0.5)
+        self._x = self._initial_x
+        self._y = self._initial_y
+        self._map = mapp
+        self._speed_x = self._speed_y = 0
+        self._abs_speed = 1
+        self._radius = mapp.block_size / 2
 
-    def update(self, dt, target):
-        self.__update_direction(target)
-        self.__x += self.__speed_x * dt
-        self.__y += self.__speed_y * dt
+    def move_to_initial_position(self):
+        self._x = self._initial_x
+        self._y = self._initial_y
+
+    def update(self, dt, target, x_direction, y_direction):
+        self._update_direction(target)
+        self._x += self._speed_x * dt
+        self._y += self._speed_y * dt
 
     def draw(self, screen):
-        pygame.draw.circle(screen, self.Red, (self.__x, self.__y), self.__radius)
+        intent = self._map.block_size / 2
+        screen.blit(self._img, (self._x - intent, self._y - intent))
 
-    def __update_direction(self, target):
-        path_finder = ShortestPathFinder(self.__map)
+    def _update_direction(self, target):
+        path_finder = ShortestPathFinder(self._map)
         dx, dy = path_finder.get_direction(self.get_cur_block(), target)
-        center_x = self.__map.block_size * (self.get_cur_block().x + 0.5)
-        center_y = self.__map.block_size * (self.get_cur_block().y + 0.5)
-        self.__speed_x = self.__speed_y = 0
+        center_x = self._map.block_size * (self.get_cur_block().x + 0.5)
+        center_y = self._map.block_size * (self.get_cur_block().y + 0.5)
+        self._speed_x = self._speed_y = 0
         if dy != 0:
-            if abs(self.__x - center_x) > self.__map.eps:
-                self.__speed_x = self.__abs_speed if center_x > self.__x else -self.__abs_speed
+            if abs(self._x - center_x) > self._map.eps:
+                self._speed_x = self._abs_speed if center_x > self._x else -self._abs_speed
             else:
-                self.__x = center_x
-                self.__speed_y = dy * self.__abs_speed
+                self._x = center_x
+                self._speed_y = dy * self._abs_speed
         else:
-            if abs(self.__y - center_y) > self.__map.eps:
-                self.__speed_y = self.__abs_speed if center_y > self.__y else -self.__abs_speed
+            if abs(self._y - center_y) > self._map.eps:
+                self._speed_y = self._abs_speed if center_y > self._y else -self._abs_speed
             else:
-                self.__y = center_y
-                self.__speed_x = dx * self.__abs_speed
+                self._y = center_y
+                self._speed_x = dx * self._abs_speed
 
     def check_collision(self, circle):
-        return Circle(self.__x, self.__y, self.__radius).intersects(circle)
+        return Circle(self._x, self._y, self._radius).intersects(circle)
 
     def get_cur_block(self):
-        return Block(self.__x, self.__y, self.__map.block_size)
+        return Block(self._x, self._y, self._map.block_size)
+
+    def set_image(self, img):
+        self._img = img

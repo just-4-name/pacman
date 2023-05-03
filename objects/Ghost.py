@@ -1,10 +1,14 @@
+from random import randrange
+
 from utils.Block import Block
+from utils.BlockType import BlockType
 from utils.Circle import Circle
 from utils.PathFinder import ShortestPathFinder
 
 
 class Ghost:
     _img = None
+    _killer_mode_img = None
 
     def __init__(self, mapp, block):
         self._initial_x = mapp.block_size * (block.x + 0.5)
@@ -25,9 +29,9 @@ class Ghost:
         self._x += self._speed_x * dt
         self._y += self._speed_y * dt
 
-    def draw(self, screen):
+    def draw(self, screen, in_killer_mode):
         intent = self._map.block_size / 2
-        screen.blit(self._img, (self._x - intent, self._y - intent))
+        screen.blit(self._killer_mode_img if in_killer_mode else self._img, (self._x - intent, self._y - intent))
 
     def _update_direction(self, target):
         path_finder = ShortestPathFinder(self._map)
@@ -48,6 +52,14 @@ class Ghost:
                 self._y = center_y
                 self._speed_x = dx * self._abs_speed
 
+    def update_in_killer_mode(self, pacman_block, dt):
+        half_blocks = len(self._map.blocks) // 2
+        target_x = 1 if pacman_block.x >= half_blocks else len(self._map.blocks) - 2
+        target_y = 1 if pacman_block.y >= half_blocks else len(self._map.blocks) - 2
+        self._update_direction(Block(target_x, target_y))
+        self._x += self._speed_x * dt
+        self._y += self._speed_y * dt
+
     def check_collision(self, circle):
         return Circle(self._x, self._y, self._radius).intersects(circle)
 
@@ -56,3 +68,22 @@ class Ghost:
 
     def set_image(self, img):
         self._img = img
+
+    def set_killer_img(self, img):
+        self._killer_mode_img = img
+
+    def _get_random_free_block(self):
+        while True:
+            try_target = Block(randrange(len(self._map.blocks)), randrange(len(self._map.blocks)))
+            if try_target.is_valid(len(self._map.blocks)) and self._map.blocks[try_target.y][try_target.x] != \
+                    BlockType.WALL:
+                break
+        return try_target
+
+    def died(self, pacman_block):
+        while True:
+            try_target = self._get_random_free_block()
+            if not try_target.is_equal(pacman_block):
+                break
+        self._x = (try_target.x + 0.5) * self._map.block_size
+        self._y = (try_target.y + 0.5) * self._map.block_size

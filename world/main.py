@@ -1,5 +1,5 @@
 import pygame
-from pacman.World import World
+from world.World import World
 
 
 WIDTH = World.BLOCK_SIZE * 15
@@ -22,7 +22,7 @@ while running:
 
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            world.update_direction(event.key)
+            world.key_pressed(event.key)
         if event.type == pygame.QUIT:
             running = False
 

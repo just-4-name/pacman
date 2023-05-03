@@ -2,7 +2,6 @@ from objects.Ghost import Ghost
 from utils.Block import Block
 from utils.BlockType import BlockType
 from utils.PathFinder import manhattan_dist
-from random import randrange
 
 
 class Pinky(Ghost):
@@ -50,7 +49,8 @@ class Clyde(Ghost):
             if self._map.blocks[self.get_cur_block().y][self.get_cur_block().x] == BlockType.WALL or \
                     (self._map.blocks[self.get_cur_block().y + self._speed_y // self._abs_speed]
                      [self.get_cur_block().x + self._speed_x // self._abs_speed] == BlockType.WALL and
-                     self.dist_to_next_block_center() < self._map.block_size - self._map.eps):
+                     self.dist_to_next_block_center() < self._map.block_size - self._map.eps) or \
+                    (self._speed_x == self._speed_y == 0):
                 cur_block = self.get_cur_block()
                 self._x = (cur_block.x + 0.5) * self._map.block_size
                 self._y = (cur_block.y + 0.5) * self._map.block_size
@@ -59,11 +59,7 @@ class Clyde(Ghost):
         self._y += self._speed_y * dt
 
     def chase_random_target(self):
-        while True:
-            try_target = Block(randrange(len(self._map.blocks)), randrange(len(self._map.blocks)))
-            if try_target.is_valid(len(self._map.blocks)) and self._map.blocks[try_target.y][try_target.x] != \
-                    BlockType.WALL:
-                break
+        try_target = super()._get_random_free_block()
         self._update_direction(try_target)
 
     def dist_to_next_block_center(self):

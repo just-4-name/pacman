@@ -48,6 +48,7 @@ class MapLoader:
                 else:
                     self.__initial_cnt_coins -= 1
             blocks.append(cur)
+        f.close()
         self.__map = Map(blocks, block_size)
         self.__ghosts = {'pinky': Pinky(self.__map, pinky_block), 'clyde': Clyde(self.__map, clyde_block),
                          'blinky': Blinky(self.__map, blinky_block), 'inky': Inky(self.__map, inky_block)}

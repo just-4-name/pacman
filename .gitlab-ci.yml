@@ -1,0 +1,14 @@
+image: python:latest
+
+
+before_script:
+  - python --version ; pip --version
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+  - pip install -r requirements.txt
+
+test:
+  script:
+    - python -m coverage run -m unittest
+    - python -m coverage report

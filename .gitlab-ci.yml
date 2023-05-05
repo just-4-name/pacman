@@ -14,7 +14,9 @@ test:
   script:
     - python -m coverage run -m unittest
     - python -m coverage html
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   artifacts:
     reports:
       coverage_report:
+        coverage_format: cobertura
         path: htmlcov/index.html

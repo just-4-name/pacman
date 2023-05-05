@@ -3,6 +3,8 @@ default:
   before_script:
     - apt-get update
     - apt-get install -y python3-pip
+    - virtualenv -p python3 venv
+    - . venv/bin/activate
     - pip install -r requirements.txt
 
 

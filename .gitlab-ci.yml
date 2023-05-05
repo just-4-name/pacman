@@ -1,14 +1,23 @@
-image: python:latest
+default:
+  image: python:latest
+  before_script:
+    - python --version ; pip --version
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
 
 
-before_script:
-  - python --version ; pip --version
-  - pip install virtualenv
-  - virtualenv venv
-  - source venv/bin/activate
-  - pip install -r requirements.txt
+
+stages:
+    - test
+    - run_tests
 
 test:
   script:
     - python -m coverage run -m unittest
     - python -m coverage report
+
+run_tests:
+  script:
+    - echo "Finished testing"

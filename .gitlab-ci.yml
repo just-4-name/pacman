@@ -9,13 +9,8 @@ default:
 
 stages:
     - test
-    - run_tests
 
 test:
   script:
     - python -m coverage run -m unittest
     - python -m coverage report
-
-run_tests:
-  script:
-    - echo "Finished testing"

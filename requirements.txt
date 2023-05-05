@@ -1,8 +1,11 @@
+altgraph==0.17.3
 coverage==7.2.5
 exceptiongroup==1.1.1
 iniconfig==2.0.0
 packaging==23.1
 pluggy==1.0.0
 pygame==2.4.0
+pyinstaller==4.10
+pyinstaller-hooks-contrib==2023.2
 pytest==7.3.1
 tomli==2.0.1

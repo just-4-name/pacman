@@ -27,6 +27,6 @@ build:
     - pyinstaller main.py --onefile
   artifacts:
     paths:
-      - dist/main
+      - dist/
       - assets
     expire_in: 30 days

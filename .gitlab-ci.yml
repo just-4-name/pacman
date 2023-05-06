@@ -1,5 +1,11 @@
-default:
-  image: python:3.7
+image: python:3.7
+
+
+stages:
+    - build
+    - test
+
+build:
   before_script:
     - apt-get update
     - apt-get install -y python3-pip
@@ -8,10 +14,14 @@ default:
     - source venv/bin/activate
     - python --version; pip --version
     - pip install -r requirements.txt
-
-stages:
-    - test
-    - build
+  script:
+    - pyinstaller main.py --onefile
+  artifacts:
+    paths:
+      - dist/main
+      - assets
+      - test
+    expire_in: 30 days
 
 test:
   script:
@@ -21,12 +31,3 @@ test:
     paths:
       - htmlcov/index.html
     expire_in: 1 week
-
-build:
-  script:
-    - pyinstaller main.py --onefile
-  artifacts:
-    paths:
-      - dist/main
-    expire_in: 30 days
-

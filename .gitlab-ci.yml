@@ -1,5 +1,5 @@
 default:
-  image: python:3.6
+  image: python:3.7
   before_script:
     - apt-get update
     - apt-get install -y python3-pip
@@ -7,7 +7,6 @@ default:
     - virtualenv venv
     - source venv/bin/activate
     - python --version; pip --version
-    - pip install pyinstaller==4.10
     - pip install -r requirements.txt
 
 stages:

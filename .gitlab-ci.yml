@@ -25,8 +25,9 @@ test:
 build:
   script:
     - pyinstaller main.py --onefile
+    - cp dist/main main
   artifacts:
     paths:
-      - dist/
+      - main
       - assets
     expire_in: 30 days

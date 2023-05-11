@@ -5,9 +5,11 @@ from utils.menu_vidgets_info_getter import MenuWidgetsGetter
 
 
 class Menu(metaclass=Singleton):
+    __FONT_SIZE = 28
+
     def __init__(self, screen, blocks_size, cnt_blocks):
         self.__screen = screen
-        self.__font = pygame.font.SysFont("HOBO", 28)
+        self.__font = pygame.font.SysFont("HOBO", self.__FONT_SIZE)
         self.__widgets_getter = MenuWidgetsGetter(blocks_size, cnt_blocks)
         self.__game_over_img = self.__widgets_getter.get_game_over_img()
 

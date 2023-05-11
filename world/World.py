@@ -36,7 +36,7 @@ class World(metaclass=Singleton):
                 self.__time_in_km = 0
                 self.__in_killer_mode = False
         self.__pacman.update(1)
-        self.__screen.fill((0, 0, 0))
+        self.__screen.fill('black')
         for ghost in self.__ghosts.values():
             if self.__in_killer_mode:
                 ghost.update_in_killer_mode(self.__pacman.cur_block, 1)

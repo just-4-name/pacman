@@ -1,0 +1,33 @@
+default:
+  image: python:3.7
+  before_script:
+    - apt-get update
+    - apt-get install -y python3-pip
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - python --version; pip --version
+    - pip install -r requirements.txt
+
+stages:
+    - test
+    - build
+
+test:
+  script:
+    - python -m coverage run -m unittest
+    - python -m coverage html
+  artifacts:
+    paths:
+      - htmlcov/index.html
+    expire_in: 1 week
+
+build:
+  script:
+    - pyinstaller main.py --onefile
+    - cp dist/main main
+  artifacts:
+    paths:
+      - main
+      - assets
+    expire_in: 30 days

@@ -18,8 +18,19 @@ class Map(metaclass=Singleton):
                     pygame.draw.rect(screen, self.BLUE, (j * self.__block_size, i * self.__block_size,
                                                          self.__block_size, self.__block_size))
 
+    def restore_coins(self):
+        for i in range(len(self.__blocks)):
+            for j in range(len(self.__blocks[0])):
+                if self.__blocks[i][j] == BlockType.SPACE:
+                    self.__blocks[i][j] = BlockType.COIN
+                if self.__blocks[i][j] == BlockType.KILLER_COIN_PICKED:
+                    self.__blocks[i][j] = BlockType.KILLER_COIN
+
     def picked_coin(self, block):
-        self.blocks[block.y][block.x] = BlockType.SPACE
+        if self.__blocks[block.y][block.x] == BlockType.KILLER_COIN:
+            self.__blocks[block.y][block.x] = BlockType.KILLER_COIN_PICKED
+        else:
+            self.__blocks[block.y][block.x] = BlockType.SPACE
 
     @property
     def blocks(self):

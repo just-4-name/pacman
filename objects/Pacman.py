@@ -104,6 +104,9 @@ class Pacman(metaclass=Singleton):
     def is_alive(self):
         return self.__lives_counter > 0
 
+    def restore_lives_counter(self):
+        self.__lives_counter = 3
+
     @property
     def lives_counter(self):
         return self.__lives_counter
